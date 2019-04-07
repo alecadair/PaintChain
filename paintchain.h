@@ -10,10 +10,10 @@ class PaintChain
 {
 public:
     PaintChain();
-    int AddBlock(PaintBlock new_block);
+    int add_block(PaintBlock new_block);
 
 private:
-    uint32_t _nDifficulty;
+    uint32_t _difficulty;
     vector<PaintBlock> _chain;
     PaintBlock _get_last_block() const;
 };

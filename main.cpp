@@ -1,12 +1,12 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include "digitalwall.h"
-#include "paintblock.h"
-
+//#include "paintblock.h"
+#include "paintchain.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    PaintBlock block();
+    //PaintBlock block();
     printf("hello world\n");
     return 0;
     MainWindow w;

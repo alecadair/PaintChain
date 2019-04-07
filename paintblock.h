@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <sstream>
 
 #define GRID_SIZE 512
 
@@ -35,9 +36,9 @@ public:
 
 class PaintBlock {
 public:
-    string s_prev_hash;
+    string prev_hash;
     PaintBlock();
-    PaintBlock(uint32_t index_in, const PixelGrid &pixel_grid);
+    PaintBlock(uint32_t index_in, const PixelGrid &pixel_grid, string data);
     //PixelGrid pixel_grid;
     string get_hash();
     void mine_block(uint32_t n_difficulty);
@@ -50,6 +51,7 @@ private:
     PixelGrid _pixel_grid;
     string _hash;
     time_t _time;
+
 
     string _calculate_hash() const;
 };
