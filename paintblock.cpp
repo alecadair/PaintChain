@@ -22,7 +22,7 @@ PaintBlock:: PaintBlock(){
 PaintBlock::PaintBlock(uint32_t index_in, const PixelGrid &pixel_grid, string data){
     _index = index_in;
     _pixel_grid = pixel_grid;
-    data = _data;
+    _data = data;
     _nonce = -1;
     _time = time(nullptr);
 
@@ -38,21 +38,30 @@ PaintBlock::PaintBlock(uint32_t index_in, const PixelGrid &pixel_grid, string da
  */
 void PaintBlock::mine_block(uint32_t n_difficulty){
     //create char array of size n_difficulty + 1
-    char cstr[n_difficulty + 1];
-    //zero at char array
+    stringstream ss;
     for(uint32_t i = 0; i < n_difficulty; i++){
-        cstr[i] = '0';
+        ss << "0";
     }
+    //char cstr[n_difficulty];
+    //zero at char array
+    //for(uint32_t i = 0; i < n_difficulty; i++){
+    //    cstr[i] = '0';
+    // }
     //create string from char array
-    string str(cstr);
+    string hash_substr = "";
+    //string str(cstr);
+    string str = ss.str();
     do {
+        cout << "Calculating Hash nonce " << _nonce << endl;
         //increment _nonce and calculate new hash
         _nonce ++;
         _hash = _calculate_hash();
+        cout << "Hash: " << _hash << endl;
+        hash_substr = _hash.substr(0, n_difficulty);
     //check if
     //if the hash string from indexes 0 to n_difficulty are not all zeros
     //a new hash must be calculated otherwise a valid hash has been created
-    }while( _hash.substr(0, n_difficulty) != str);
+    }while( hash_substr != str);
 
     cout << "New Paint Block has been mined: " << _hash << endl;
 }
@@ -63,6 +72,6 @@ string PaintBlock::get_hash(){
 
 inline string PaintBlock::_calculate_hash() const{
     stringstream ss;
-    ss << _index << _time << _nonce << prev_hash;
+    ss << _index << _time << _nonce << _data << prev_hash;
     return sha256(ss.str());
 }

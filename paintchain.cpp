@@ -6,7 +6,7 @@ PaintChain::PaintChain()
     PaintBlock block(0, grid, "genesis_block");
     _chain.emplace_back(block);
     //for testing set difficulty to 4
-    _difficulty = 4;
+    _difficulty = 1;
 }
 
 int PaintChain::add_block(PaintBlock new_block){

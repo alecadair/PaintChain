@@ -5,6 +5,7 @@
 #include <ctime>
 #include <vector>
 #include <sstream>
+#include <string>
 
 #define GRID_SIZE 512
 
