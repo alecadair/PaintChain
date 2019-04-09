@@ -28,14 +28,16 @@ SOURCES += \
     digitalwall.cpp \
     paintblock.cpp \
     paintchain.cpp \
-    sha256.cpp
+    sha256.cpp \
+    canvas.cpp
 
 HEADERS += \
         mainwindow.h \
     digitalwall.h \
     paintblock.h \
     paintchain.h \
-    sha256.h
+    sha256.h \
+    canvas.h
 
 FORMS += \
         mainwindow.ui

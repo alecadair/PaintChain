@@ -3,11 +3,9 @@
 #include "digitalwall.h"
 //#include "paintblock.h"
 #include "paintchain.h"
+#include "canvas.h"
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
-    //PaintBlock block();
+void test_paint_chain(){
     PaintChain paint_chain;
     PixelGrid initial_grid;
     cout << "MINING BLOCK 1" << endl;
@@ -18,8 +16,15 @@ int main(int argc, char *argv[])
 
     cout << "MINING BLOCK 3" << endl;
     paint_chain.add_block(PaintBlock(3, initial_grid, "2,0"));
+}
 
-    return 0;
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    //test_paint_chain();
+    Canvas canvas;
+    canvas.load_images();
+    //return 0;
     MainWindow w;
     w.show();
 

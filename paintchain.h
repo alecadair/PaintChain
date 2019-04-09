@@ -11,6 +11,7 @@ class PaintChain
 public:
     PaintChain();
     int add_block(PaintBlock new_block);
+    PaintBlock get_block(uint32_t block_index);
 
 private:
     uint32_t _difficulty;
