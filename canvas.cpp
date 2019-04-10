@@ -1,6 +1,17 @@
+#include <QtWidgets>
+#if defined(QT_PRINTSUPPORT_LIB)
+#include <QtPrintSupport/qtprintsupportglobal.h>
+#if QT_CONFIG(printdialog)
+#include <QPrintDialog>
+#endif
+#endif
+
 #include "canvas.h"
 
-Canvas::Canvas():image_label(new QLabel), scale_factor(1){
+Canvas::Canvas():image_label(new QLabel),
+                        scale_factor(1),
+                        scroll_area(new QScrollArea) {
+
     image_label->setBackgroundRole(QPalette::Base);
     image_label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     image_label->setScaledContents(true);
@@ -11,7 +22,7 @@ Canvas::Canvas():image_label(new QLabel), scale_factor(1){
 
     setCentralWidget(scroll_area);
 
-    resize(QGuiApplication::primaryScreen()->availableSize());
+    resize(QGuiApplication::primaryScreen()->availableSize()*3/5);
     //resize(QGuiApplication::primaryScreen()->availableSize());
     //QGuiApplication::primaryScreen()->
     //resize(QGuiApplication::primaryScreen());

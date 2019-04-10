@@ -2,16 +2,26 @@
 #define CANVAS_H
 
 #include <QMainWindow>
+#include <QImage>
+#ifndef QT_NO_PRINTER
+    #include <QPrinter>
+#endif
 #include <QLabel>
 #include <QScrollArea>
 #include <QGuiApplication>
 #include <QApplication>
 #include <QScreen>
-#include <QImage>
 #include <QVector>
 #include <QString>
 #include <QImageReader>
 #include <QAction>
+#include <QPrinter>
+
+class QAction;
+class QLabel;
+class QMenu;
+class QScrollArea;
+class QScrollBar;
 
 class Canvas : public QMainWindow
 {
@@ -29,9 +39,10 @@ public:
 private slots:
     void open();
     void refresh();
+    void print();
 
 private:
-
+    void create_actions();
     QVector<QImage> _images;
     QImage image;
     QLabel* image_label;
