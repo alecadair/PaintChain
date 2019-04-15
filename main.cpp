@@ -20,13 +20,15 @@ void test_paint_chain(){
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
+    QGuiApplication::setApplicationDisplayName(Canvas::tr("Canvas"));
     //test_paint_chain();
     Canvas canvas;
     canvas.load_images();
+    canvas.show_images();
     //return 0;
-    MainWindow w;
-    w.show();
-
-    return a.exec();
+    //MainWindow w;
+    //w.show();
+    canvas.show();
+    return app.exec();
 }
