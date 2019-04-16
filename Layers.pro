@@ -29,7 +29,8 @@ SOURCES += \
     paintblock.cpp \
     paintchain.cpp \
     sha256.cpp \
-    canvas.cpp
+    canvas.cpp \
+    canvasgrid.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -37,7 +38,8 @@ HEADERS += \
     paintblock.h \
     paintchain.h \
     sha256.h \
-    canvas.h
+    canvas.h \
+    canvasgrid.h
 
 FORMS += \
         mainwindow.ui

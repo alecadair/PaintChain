@@ -7,6 +7,18 @@
 #endif
 
 #include "canvas.h"
+CanvasImage :: CanvasImage(){
+    this->_location = QPoint(0,0);
+}
+
+void CanvasImage::set_location(int x, int y){
+    QPoint new_loc(x,y);
+    this->_location = new_loc;
+}
+
+void CanvasImage::set_location(QPoint location){
+    this->_location = location;
+}
 
 Canvas::Canvas():image_label(new QLabel),
                         scale_factor(1),
@@ -80,6 +92,8 @@ void Canvas::scale_image(double factor){
     zoom_out_act->setEnabled(scale_factor > 0.333);
 }
 
+
+
 void Canvas::print(){
     QPrintDialog dialog(&printer, this);
     if(dialog.exec()){
@@ -101,6 +115,13 @@ void Canvas::print(){
     }
 }
 
+QImage Canvas::convert_file_path_to_image(QString file_path){
+    QImageReader reader(file_path);
+    reader.setAutoTransform(true);
+    QImage image = reader.read();
+    return image;
+}
+
 void Canvas::load_images() {
     QVector<QString> file_paths;
     file_paths.push_back("/home/alec/Documents/DigitalWall/image_sandbox/city_sunlight.jpg");
@@ -116,10 +137,35 @@ void Canvas::load_images() {
             _images.push_back(new_image);
         }
     }
-    //set_image();
-    set_image(_images.at(0));
+    set_images();
+    //set_image(_images.at(0));
 }
-void Canvas::set_image(){
+
+//This is from the Qt example ImageViewer -- not my code.
+bool Canvas::load_file(const QString &fileName){
+
+    QImageReader reader(fileName);
+    reader.setAutoTransform(true);
+    const QImage newImage = reader.read();
+    if (newImage.isNull()) {
+        QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
+                                 tr("Cannot load %1: %2")
+                                 .arg(QDir::toNativeSeparators(fileName), reader.errorString()));
+        return false;
+    }
+
+    //setImage(newImage);
+
+    //setWindowFilePath(fileName);
+
+    const QString message = tr("Opened \"%1\", %2x%3, Depth: %4")
+        .arg(QDir::toNativeSeparators(fileName)).arg(image.width()).arg(image.height()).arg(image.depth());
+    statusBar()->showMessage(message);
+    return true;
+
+}
+
+/*void Canvas::set_images(){
     //vector<QPixmap> maps;
     QVector<QPixmap> maps;
     int size_x = 0;
@@ -140,14 +186,15 @@ void Canvas::set_image(){
    image_label->setPixmap(QPixmap::fromImage(image));
    scale_factor = 1.0;
    scroll_area->setVisible(true);
-}
-void Canvas::set_image(const QImage &new_image){
+}*/
+void Canvas::set_images(){
+//void Canvas::set_image(const QImage &new_image){
     //vector<QPixmap> maps;
     QVector<QPixmap> maps;
     int size_x = 0;
     int size_y = 0;
     //QPixmap image_map = QPixmap::fromImage(new_image);
-    QPixmap image_map(20000, 20000);
+    QPixmap image_map(10000, 10000);
     QPainter painter(&image_map);
     //image_map.
     for(int i = 0; i < _images.size(); i ++){
@@ -212,9 +259,10 @@ void Canvas::create_actions(){
     QAction *open_act = file_menu->addAction(tr("&Open..."), this, &Canvas::open);
 
     QMenu *view_menu = menuBar()->addMenu(tr("&View"));
+    QMenu* insert_menu = menuBar()->addMenu(tr("Add Photo"));
 
     zoom_in_act = view_menu->addAction(tr("Zoom &In (25%)"), this, &Canvas::zoom_in);
-    zoom_in_act->setShortcut(QKeySequence::ZoomOut);
+    zoom_in_act->setShortcut(QKeySequence::ZoomIn);
     zoom_in_act->setEnabled(false);
 
     zoom_out_act = view_menu->addAction(tr("Zoom &Out (25%)"), this, &Canvas::zoom_out);
@@ -232,5 +280,58 @@ void Canvas::create_actions(){
     fit_to_window_act->setCheckable(true);
     fit_to_window_act->setShortcut(tr("Ctrl+F"));
 
+    add_photo_act = insert_menu->addAction(tr("Browse For Photo"), this, &Canvas::add_photo);
+    add_photo_act->setShortcut(tr("Ctrl+P"));
+
     //fit_to_window_act =
+}
+
+void Canvas::add_photo(){
+    //QString file_name = QFileDialog::getOpenFileName(this,tr("Choose Photo To Add"), ]);
+    QFileDialog photo_dialog(this, tr("Choose Photo To Add"));
+    initializeImageFileDialog(photo_dialog, QFileDialog::AcceptOpen);
+    QStringList file_names;
+    if(photo_dialog.exec())
+        file_names = photo_dialog.selectedFiles();
+    QString str; QImage img;
+    foreach(str, file_names){
+        img = this->convert_file_path_to_image(str);
+        if(!img.isNull()){
+            _images.push_back(img);
+        }
+    }
+    set_images();
+    //while(photo_dialog.exec() == QDialog::Accepted){
+    //photo_dialog.exec();
+    //photo_dialog.
+    //}
+
+}
+
+void Canvas::place_photo(QImage new_photo){
+
+}
+
+//THIS FUNCTION CAME FROM Qt ImageViewer EXAMPLE
+/*https://doc.qt.io/qt-5/qtwidgets-widgets-imageviewer-imageviewer-cpp.html*/
+void Canvas::initializeImageFileDialog(QFileDialog &dialog, QFileDialog::AcceptMode acceptMode)
+{
+    static bool firstDialog = true;
+
+    if (firstDialog) {
+        firstDialog = false;
+        const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+        dialog.setDirectory(picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
+    }
+
+    QStringList mimeTypeFilters;
+    const QByteArrayList supportedMimeTypes = acceptMode == QFileDialog::AcceptOpen
+        ? QImageReader::supportedMimeTypes() : QImageWriter::supportedMimeTypes();
+    foreach (const QByteArray &mimeTypeName, supportedMimeTypes)
+        mimeTypeFilters.append(mimeTypeName);
+    mimeTypeFilters.sort();
+    dialog.setMimeTypeFilters(mimeTypeFilters);
+    dialog.selectMimeTypeFilter("image/jpeg");
+    if (acceptMode == QFileDialog::AcceptSave)
+        dialog.setDefaultSuffix("jpg");
 }
